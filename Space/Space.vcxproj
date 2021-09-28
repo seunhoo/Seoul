@@ -27,6 +27,7 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectMgr.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceMgr.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -34,6 +35,8 @@
     <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StageOne.cpp" />
+    <ClCompile Include="StageTwo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -49,6 +52,7 @@
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectMgr.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceMgr.h" />
     <ClInclude Include="Scene.h" />
@@ -56,6 +60,8 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StageOne.h" />
+    <ClInclude Include="StageTwo.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TextMgr.h" />
     <ClInclude Include="Texture.h" />

@@ -13,7 +13,5 @@ public:
 
 public:
 
-	bool m_Check;
-
 };
 

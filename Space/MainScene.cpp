@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "MainScene.h"
-
+#include"StageOne.h"
+#include"Player.h"
 
 MainScene::MainScene()
-	:m_Check(false)
 {
 }
 
@@ -13,7 +13,7 @@ MainScene::~MainScene()
 
 void MainScene::Init()
 {
-
+	SceneDirector::GetInst()->ChangeScene(new StageOne());
 }
 
 void MainScene::Release()
