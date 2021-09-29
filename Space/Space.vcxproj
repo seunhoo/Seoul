@@ -32,6 +32,7 @@
     <ClCompile Include="ResourceMgr.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneDirector.cpp" />
+    <ClCompile Include="Skill.cpp" />
     <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="Space.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneDirector.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Skill.h" />
     <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StageOne.h" />

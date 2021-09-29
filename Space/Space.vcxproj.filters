@@ -96,6 +96,9 @@
     <ClCompile Include="StageTwo.cpp">
       <Filter>Game\Object\NewFilter1</Filter>
     </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Game\Object\NewFilter2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="StageTwo.h">
       <Filter>Game\Object\NewFilter1</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Game\Object\NewFilter2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

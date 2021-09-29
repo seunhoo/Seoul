@@ -41,7 +41,8 @@ public:
 
 	Animation* m_Player;
 
-	Animation* m_Skill;
+	Animation* m_RSkill;
+	Animation* m_LSkill;
 
 	Player();
 
@@ -52,6 +53,8 @@ public:
 
 	bool m_JumpCheck;
 
+
+
 	void Update(float deltatime, float time);
 	void Move();
 	void Attack();
@@ -59,4 +62,5 @@ public:
 	void OnCollision(Object* obj);
 
 };
+
 

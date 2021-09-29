@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "Player.h"
-
+#include"Skill.h"
 Player::Player()
 {
+	m_LeftRightCheck = 1;
+	m_State = State::NONE;
 	m_LStand = new Animation();
 	m_LStand->SetParent(this);
 	m_LStand->Init(0.2, true);
 	m_LStand->AddContinueFrame(L"Painting/Fight/Kyo/Stand/", 11, 15);
 	m_LStand->m_Scale /= 1.5;
+
 
 	m_RStand = new Animation();
 	m_RStand->SetParent(this);
@@ -41,13 +44,13 @@ Player::Player()
 
 	m_LJump = new Animation();
 	m_LJump->SetParent(this);
-	m_LJump->Init(0.2, true);
+	m_LJump->Init(0.1, true);
 	m_LJump->AddContinueFrame(L"Painting/Fight/Kyo/Jump/", 11, 17);
 	m_LJump->m_Scale /= 1.5;
 
 	m_RJump = new Animation();
 	m_RJump->SetParent(this);
-	m_RJump->Init(0.2, true);
+	m_RJump->Init(0.1, true);
 	m_RJump->AddContinueFrame(L"Painting/Fight/Kyo/Jump/", 21, 27);
 	m_RJump->m_Scale /= 1.5;
 
@@ -75,6 +78,12 @@ Player::Player()
 	m_RSit->AddContinueFrame(L"Painting/Fight/Kyo/Sit/", 4, 5);
 	m_RSit->m_Scale *= 2;
 
+	m_RSkill = new Animation();
+	m_RSkill->SetParent(this);
+	m_RSkill->Init(0.2, true);
+	m_RSkill->AddContinueFrame(L"Painting/Fight/Kyo Kusanagi/Kyo Kusanagi_23", 3, 6);
+	m_RSkill->m_Scale.x *= -1;
+
 	m_Player = m_RStand;
 	m_Player->SetParent(this);
 	m_State = State::NONE;
@@ -94,15 +103,19 @@ void Player::Move()
 {
 	if (INPUT->GetKey('W') == KeyState::DOWN && m_Position.y > 100)
 	{
+		m_State = State::Jump;
 		m_JumpCheck = true;
 	}
 	else if (INPUT->GetKey('A') == KeyState::PRESS && m_Position.x > 50)
 	{
-		m_State = State::LeftMove;
+
 		m_LeftRightCheck = false;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
+		{
+			m_State = State::LeftMove;
 			m_Player = m_LMove;
-		m_Position.x -= 5;
+			m_Position.x -= 5;
+		}
 	}
 	else if (INPUT->GetKey('S') == KeyState::PRESS)
 	{
@@ -117,13 +130,23 @@ void Player::Move()
 	}
 	else if (INPUT->GetKey('D') == KeyState::PRESS && m_Position.x < 1820)
 	{
-		m_State = State::RightMove;
+
 		m_LeftRightCheck = true;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
+		{
+			m_State = State::RightMove;
 			m_Player = m_RMove;
-		m_Position.x += 5;
+			m_Position.x += 5;
+		}
 	}
-	else
+	else if (m_State == State::LeftMove || m_State == State::RightMove)
+	{
+		if (!(m_State == State::Skill || m_State == State::Jump))
+		{
+			m_State = State::NONE;
+		}
+	}
+	if(!(m_State == State::Skill || m_State == State::Kick|| m_State == State::Jump || m_State == State::Punch || m_State == State::RightMove || m_State == State::LeftMove))
 	{
 		if(m_LeftRightCheck)
 			m_Player = m_RStand;
@@ -133,7 +156,7 @@ void Player::Move()
 
 	if (m_JumpCheck)
 	{
-		m_State = State::Jump;
+		m_Player->m_CurrentFrame = 0;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Punch))
 		{
 			if (m_LeftRightCheck)
@@ -142,11 +165,11 @@ void Player::Move()
 
 				if (m_Player->m_CurrentFrame < 3)
 				{
-					m_Position.y -= dt * 500;
+					m_Position.y -= dt * 250;
 				}
 				else if (m_Player->m_CurrentFrame < 6)
 				{
-					m_Position.y += dt * 500;
+					m_Position.y += dt * 250;
 				}
 
 				if (m_Player->m_CurrentFrame >= 6)
@@ -156,8 +179,10 @@ void Player::Move()
 					else
 						m_Player = m_LStand;
 
+					m_Position.y = 900;
 					m_Player->m_CurrentFrame = 0;
-					m_JumpCheck = 0;
+					m_JumpCheck = false;
+					m_State = State::NONE;
 				}
 			}
 			else
@@ -166,11 +191,11 @@ void Player::Move()
 
 				if (m_Player->m_CurrentFrame < 3)
 				{
-					m_Position.y -= dt * 500;
+					m_Position.y -= dt * 250;
 				}
 				else if (m_Player->m_CurrentFrame < 6)
 				{
-					m_Position.y += dt * 500;
+					m_Position.y += dt * 250;
 				}
 
 				if (m_Player->m_CurrentFrame >= 6)
@@ -180,12 +205,16 @@ void Player::Move()
 					else
 						m_Player = m_LStand;
 
+					m_Position.y = 900;
 					m_Player->m_CurrentFrame = 0;
-					m_JumpCheck = 0;
+					m_JumpCheck = false;
+					m_State = State::NONE;
 				}
-			}
-
-			
+			}			
+		}
+		else
+		{
+			m_State = State::NONE;
 		}
 
 	}
@@ -193,6 +222,39 @@ void Player::Move()
 
 void Player::Attack()
 {
+		cout << m_Player->m_CurrentFrame << endl;
+	if (INPUT->GetKey('U') == KeyState::DOWN)
+	{
+		m_State = State::Skill;
+		m_Player = m_RSkill;
+		m_Player->m_CurrentFrame = 0;
+	}
+	if (m_State == State::Skill)
+	{
+		if (m_Player->m_CurrentFrame >= 3)
+		{
+			ObjMgr->AddObject(new Skill(m_Position.x, m_Position.y - 30), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x + 50, m_Position.y), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x - 50, m_Position.y - 30), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x - 100, m_Position.y + 50), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x - 100, m_Position.y - 50), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x + 100, m_Position.y - 50), "Skill");
+			ObjMgr->AddObject(new Skill(m_Position.x + 100, m_Position.y + 50), "Skill");
+			m_State = State::NONE;
+		}
+	}
+	if (INPUT->GetKey('I') == KeyState::DOWN)
+	{
+
+	}
+	if (INPUT->GetKey('J') == KeyState::DOWN)
+	{
+
+	}
+	if (INPUT->GetKey('K') == KeyState::DOWN)
+	{
+
+	}
 }
 
 void Player::Render()
