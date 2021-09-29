@@ -16,7 +16,7 @@ enum class MoveState
 	Left,
 	NONE
 };
-class Player : public Object
+class Monster : public Object
 {
 public:
 
@@ -39,34 +39,26 @@ public:
 	Animation* m_RSit;
 	Animation* m_LSit;
 
-	Animation* m_Player;
+	Animation* m_Monster;
 
 	Animation* m_RSkill;
 	Animation* m_LSkill;
 
-	Player();
+
+	Monster(float posx,float posy,int type);
+
+	int m_Type;
 
 	State m_State;
+
 	MoveState m_MoveState;
 
 	bool m_LeftRightCheck;
 
-	bool m_JumpCheck;
-
-	float m_Count;
-	bool m_LCommandCheck;
-	bool m_RCommandCheck;
-	float m_LimitTime;
-
-
-
 	void Update(float deltatime, float time);
 	void Move();
 	void Attack();
-	void CommandSkill();
 	void Render();
 	void OnCollision(Object* obj);
-
 };
-
 

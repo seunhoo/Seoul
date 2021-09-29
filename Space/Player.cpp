@@ -96,19 +96,20 @@ void Player::Update(float deltatime, float time)
 {
 	Move();
 	Attack();
+	CommandSkill();
 	m_Player->Update(deltatime, time);
 }
 
 void Player::Move()
 {
-	if (INPUT->GetKey('W') == KeyState::DOWN && m_Position.y > 100)
+	if (INPUT->GetKey('W') == KeyState::DOWN && m_Position.y > 750)
 	{
 		m_State = State::Jump;
 		m_JumpCheck = true;
 	}
 	else if (INPUT->GetKey('A') == KeyState::PRESS && m_Position.x > 50)
 	{
-
+		m_LCommandCheck = true;
 		m_LeftRightCheck = false;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
 		{
@@ -119,6 +120,7 @@ void Player::Move()
 	}
 	else if (INPUT->GetKey('S') == KeyState::PRESS)
 	{
+
 		m_State = State::Sit;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
 		{
@@ -130,6 +132,9 @@ void Player::Move()
 	}
 	else if (INPUT->GetKey('D') == KeyState::PRESS && m_Position.x < 1820)
 	{
+		if (m_LCommandCheck == true)
+			m_RCommandCheck = true;
+
 
 		m_LeftRightCheck = true;
 		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
@@ -222,13 +227,55 @@ void Player::Move()
 
 void Player::Attack()
 {
-		cout << m_Player->m_CurrentFrame << endl;
-	if (INPUT->GetKey('U') == KeyState::DOWN)
+
+
+	if (INPUT->GetKey('I') == KeyState::DOWN)
 	{
-		m_State = State::Skill;
-		m_Player = m_RSkill;
-		m_Player->m_CurrentFrame = 0;
+
 	}
+	if (INPUT->GetKey('J') == KeyState::DOWN)
+	{
+
+	}
+	if (INPUT->GetKey('K') == KeyState::DOWN)
+	{
+
+	}
+}
+
+void Player::CommandSkill()
+{
+	cout << m_Count << endl;
+
+	if (m_LCommandCheck && m_RCommandCheck == false)
+		m_LimitTime += dt;
+	if (m_LimitTime >= 0.1)
+	{
+		m_LCommandCheck = false;
+		m_LimitTime = 0;
+	}
+
+	if (m_LCommandCheck == true && m_RCommandCheck == true)
+	{
+		m_Count += dt;
+	}
+	if (m_Count >= 0.05f && m_Count <=0.3f)
+	{
+		if (INPUT->GetKey('U') == KeyState::DOWN)
+		{
+			m_State = State::Skill;
+			m_Player = m_RSkill;
+			m_Player->m_CurrentFrame = 0;
+		}
+		
+	}
+	else if (m_Count >= 0.4f)
+	{
+		m_Count = 0;
+		m_LCommandCheck = false;
+		m_RCommandCheck = false;
+	}
+
 	if (m_State == State::Skill)
 	{
 		if (m_Player->m_CurrentFrame >= 3)
@@ -243,18 +290,7 @@ void Player::Attack()
 			m_State = State::NONE;
 		}
 	}
-	if (INPUT->GetKey('I') == KeyState::DOWN)
-	{
-
-	}
-	if (INPUT->GetKey('J') == KeyState::DOWN)
-	{
-
-	}
-	if (INPUT->GetKey('K') == KeyState::DOWN)
-	{
-
-	}
+	
 }
 
 void Player::Render()
