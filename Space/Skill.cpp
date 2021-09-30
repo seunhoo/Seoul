@@ -17,6 +17,9 @@ void Skill::Update(float deltatime, float time)
 
 	if (m_Skill->m_CurrentFrame >= 14)
 		ObjMgr->RemoveObject(this);
+
+
+
 }
 
 void Skill::Render()

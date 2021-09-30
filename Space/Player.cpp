@@ -102,10 +102,19 @@ void Player::Update(float deltatime, float time)
 
 void Player::Move()
 {
-	if (INPUT->GetKey('W') == KeyState::DOWN && m_Position.y > 750)
+	if (INPUT->GetKey('W') == KeyState::PRESS && m_Position.y > 850)
 	{
-		m_State = State::Jump;
-		m_JumpCheck = true;
+		m_Position.y -= 5;
+		if (m_LeftRightCheck)
+		{
+			m_State = State::RightMove;
+			m_Player = m_RMove;
+		}
+		else
+		{
+			m_State = State::LeftMove;
+			m_Player = m_LMove;
+		}
 	}
 	else if (INPUT->GetKey('A') == KeyState::PRESS && m_Position.x > 50)
 	{
@@ -118,16 +127,18 @@ void Player::Move()
 			m_Position.x -= 5;
 		}
 	}
-	else if (INPUT->GetKey('S') == KeyState::PRESS)
+	else if (INPUT->GetKey('S') == KeyState::PRESS && m_Position.y < 970)
 	{
-
-		m_State = State::Sit;
-		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Jump || m_State == State::Punch))
+		m_Position.y += 5;
+		if (m_LeftRightCheck)
 		{
-			if (m_LeftRightCheck)
-				m_Player = m_RSit;
-			else
-				m_Player = m_LSit;
+			m_State = State::RightMove;
+			m_Player = m_RMove;
+		}
+		else
+		{
+			m_State = State::LeftMove;
+			m_Player = m_LMove;
 		}
 	}
 	else if (INPUT->GetKey('D') == KeyState::PRESS && m_Position.x < 1820)
@@ -159,70 +170,7 @@ void Player::Move()
 			m_Player = m_LStand;
 	}
 
-	if (m_JumpCheck)
-	{
-		m_Player->m_CurrentFrame = 0;
-		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Punch))
-		{
-			if (m_LeftRightCheck)
-			{
-				m_Player = m_RJump;
-
-				if (m_Player->m_CurrentFrame < 3)
-				{
-					m_Position.y -= dt * 250;
-				}
-				else if (m_Player->m_CurrentFrame < 6)
-				{
-					m_Position.y += dt * 250;
-				}
-
-				if (m_Player->m_CurrentFrame >= 6)
-				{
-					if (m_LeftRightCheck)
-						m_Player = m_RStand;
-					else
-						m_Player = m_LStand;
-
-					m_Position.y = 900;
-					m_Player->m_CurrentFrame = 0;
-					m_JumpCheck = false;
-					m_State = State::NONE;
-				}
-			}
-			else
-			{
-				m_Player = m_LJump;
-
-				if (m_Player->m_CurrentFrame < 3)
-				{
-					m_Position.y -= dt * 250;
-				}
-				else if (m_Player->m_CurrentFrame < 6)
-				{
-					m_Position.y += dt * 250;
-				}
-
-				if (m_Player->m_CurrentFrame >= 6)
-				{
-					if (m_LeftRightCheck)
-						m_Player = m_RStand;
-					else
-						m_Player = m_LStand;
-
-					m_Position.y = 900;
-					m_Player->m_CurrentFrame = 0;
-					m_JumpCheck = false;
-					m_State = State::NONE;
-				}
-			}			
-		}
-		else
-		{
-			m_State = State::NONE;
-		}
-
-	}
+	
 }
 
 void Player::Attack()
@@ -259,7 +207,7 @@ void Player::CommandSkill()
 	{
 		m_Count += dt;
 	}
-	if (m_Count >= 0.05f && m_Count <=0.3f)
+	if (m_Count >= 0.001f && m_Count <=0.3f)
 	{
 		if (INPUT->GetKey('U') == KeyState::DOWN)
 		{

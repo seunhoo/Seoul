@@ -1,5 +1,5 @@
 #pragma once
-enum class State
+enum class MState
 {
 	Punch,
 	Kick,
@@ -10,7 +10,7 @@ enum class State
 	Sit,
 	NONE
 };
-enum class MoveState
+enum class MMoveState
 {
 	Right,
 	Left,
@@ -47,13 +47,26 @@ public:
 
 	Monster(float posx,float posy,int type);
 
+	wstring m_MonsterName;
+
 	int m_Type;
 
-	State m_State;
+	MState m_State;
 
-	MoveState m_MoveState;
+	MMoveState m_MoveState;
 
 	bool m_LeftRightCheck;
+
+	float m_MoveTime;
+	bool m_MoveCheck;
+
+	float m_AttackTime;
+	bool m_AttackCheck;
+
+	float m_SkillTime;
+	bool m_SkillCheck;
+
+	bool m_Start;
 
 	void Update(float deltatime, float time);
 	void Move();
