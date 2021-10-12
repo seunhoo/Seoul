@@ -20,25 +20,25 @@ Player::Player()
 
 	m_LPunch = new Animation();
 	m_LPunch->SetParent(this);
-	m_LPunch->Init(0.2, true);
+	m_LPunch->Init(0.1, true);
 	m_LPunch->AddContinueFrame(L"Painting/Fight/Kyo/Punch/", 21, 25);
 	m_LPunch->m_Scale /= 1.5;
 
 	m_RPunch = new Animation();
 	m_RPunch->SetParent(this);
-	m_RPunch->Init(0.2, true);
+	m_RPunch->Init(0.1, true);
 	m_RPunch->AddContinueFrame(L"Painting/Fight/Kyo/Punch/", 31, 35);
 	m_RPunch->m_Scale /= 1.5;
 
 	m_LKick = new Animation();
 	m_LKick->SetParent(this);
-	m_LKick->Init(0.2, true);
+	m_LKick->Init(0.07, true);
 	m_LKick->AddContinueFrame(L"Painting/Fight/Kyo/Kick/", 11, 17);
 	m_LKick->m_Scale /= 1.5;
 
 	m_RKick = new Animation();
 	m_RKick->SetParent(this);
-	m_RKick->Init(0.2, true);
+	m_RKick->Init(0.07, true);
 	m_RKick->AddContinueFrame(L"Painting/Fight/Kyo/Kick/", 21, 27);
 	m_RKick->m_Scale /= 1.5;
 
@@ -164,6 +164,7 @@ void Player::Move()
 	}
 	if(!(m_State == State::Skill || m_State == State::Kick|| m_State == State::Jump || m_State == State::Punch || m_State == State::RightMove || m_State == State::LeftMove))
 	{
+		m_State = State::NONE;
 		if(m_LeftRightCheck)
 			m_Player = m_RStand;
 		else
@@ -179,15 +180,58 @@ void Player::Attack()
 
 	if (INPUT->GetKey('I') == KeyState::DOWN)
 	{
-
+		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Punch))
+		{
+			m_State = State::Kick;
+		}
 	}
-	if (INPUT->GetKey('J') == KeyState::DOWN)
+	if (INPUT->GetKey('U') == KeyState::DOWN && (m_LCommandCheck == false && m_RCommandCheck == false))
 	{
-
+		if (!(m_State == State::Skill || m_State == State::Kick || m_State == State::Punch))
+		{
+			m_State = State::Punch;
+		}
 	}
 	if (INPUT->GetKey('K') == KeyState::DOWN)
 	{
 
+	}
+
+
+	if (m_State == State::Punch)
+	{
+		if (m_LeftRightCheck)
+		{
+			m_Player = m_RPunch;
+		}
+		else
+		{
+			m_Player = m_LPunch;
+		}
+		if (m_Player->m_CurrentFrame > 3)
+		{
+			m_Player->m_CurrentFrame = 0;
+			m_State = State::NONE;
+		}
+		
+	}
+
+	if (m_State == State::Kick)
+	{
+		if (m_LeftRightCheck)
+		{
+			m_Player = m_RKick;
+		}
+		else
+		{
+			m_Player = m_LKick;
+		}
+
+		if (m_Player->m_CurrentFrame > 5)
+		{
+			m_Player->m_CurrentFrame = 0;
+			m_State = State::NONE;
+		}
 	}
 }
 
